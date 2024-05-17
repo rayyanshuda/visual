@@ -1,0 +1,32 @@
+package com.mycompany.visual;
+import java.awt.Color;
+public class enemy {
+    int x;
+    int y;
+    int health;
+    Color c;
+    
+    enemy (int x, int y, int health) {
+        this.x = x;
+        this.y = y;
+        this.health = health;
+        c = new Color(255, 255, 255);
+    }
+    
+    void hit (int points) {
+        health -= points;
+        if (health<=0)
+            health = 0;
+        c = new Color(255, health * 5, health * 5);
+    }
+    
+    boolean isGone() {
+        return (health<=0);
+    }
+    
+    void setLocation(int x, int y) {
+        this.x = x;
+        this.y = y;
+        
+    }
+}
