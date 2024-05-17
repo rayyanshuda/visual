@@ -1,0 +1,295 @@
+package com.mycompany.visual;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.awt.Font;
+import java.util.ArrayList;
+import java.util.Random;
+ 
+public class Visual extends JPanel implements KeyListener {
+    boolean gameover = false;
+    static long startTime;
+    static long timer;
+    static boolean moveForward = false;
+    static int size = 100;
+    static Color red = new Color(255, 0, 0);
+    static Color white = new Color(255, 255, 255);
+    static Color black = new Color(0, 0, 0);
+    static int step = 0;
+    static boolean pickupBlue = false;
+    static ArrayList<String> obj = new ArrayList<>();
+    //static wall w1 = new wall(230, 50, 10, 100);
+    //static wall w2 = new wall(90, 56, 40, 10);
+    static ArrayList<wall> walls = 
+            new ArrayList<>();    
+    static ArrayList<enemy> enemies = 
+            new ArrayList<>();
+
+    static int charx = 0;
+    static int chary = 0;
+    static int speed = 5;
+ 
+    @Override
+    public void keyTyped(KeyEvent e) {
+ 
+    }
+ 
+    @Override
+    public void keyPressed(KeyEvent e) {
+        //char k = e.getKeyChar();   
+        
+        int kp = e.getKeyCode();
+        if (kp==e.VK_SPACE) {
+            timer = System.currentTimeMillis();
+            moveForward = true;
+        }
+ 
+        for (enemy en: enemies) {
+            if (collide(en)) {
+                en.hit(5);
+                if (en.isGone()) {
+                    enemies.remove(en);
+                    return;
+                }
+                Random rd = new Random();
+                int newX, newY;
+                newX = rd.nextInt(1, 600);
+                newY = rd.nextInt(1, 600);
+                en.setLocation(newX, newY);
+            }
+        }
+        if (kp == KeyEvent.VK_D) {
+            if (charx > 850) {
+                return;
+            }
+            charx += speed;
+            step = (step + 1) % 2;
+        } else if (kp == KeyEvent.VK_A) {
+            if (charx <= 0) {
+                return;
+            }
+            charx -= speed;
+            step = (step + 1) % 2;
+        } else if (kp == KeyEvent.VK_W) {
+            if (chary <= 0) {
+                return;
+            }
+            chary -= speed;
+        } else if (kp == KeyEvent.VK_S) {
+            if (chary >= 560) {
+                return;
+            }
+            chary += speed;
+        }
+ 
+        if (charx >= 200 && charx <= 345 && chary >= 100 & chary <= 160) {
+            pickupBlue = true;
+        }
+        //check if collides with keys.
+        if (charx>=130 && charx<=190  && chary>=110 && chary<=210) {
+            System.out.println("key 1 is collected");
+            if (!obj.contains("key1"))
+                obj.add("key1");
+        }
+        if (charx>=320 && charx<=390  && chary>=165 && chary<=265) {
+            System.out.println("key 2 is collected");
+            if (!obj.contains("key3"))
+                obj.add("key3");
+        }            
+        if (charx>=610 && charx<=710  && chary>=410 && chary<=510) {
+            System.out.println("key 3 is collected");
+            if (!obj.contains("key2"))
+                obj.add("key2");
+        }      
+        if (charx>=520 && charx<=635 &&chary >=410 && chary<=540) {
+            if (obj.contains("key1") && obj.contains("key2") && obj.contains("key3") &&!obj.contains("treasure"))
+                obj.add("treasure");                   
+        }
+        //System.out.println(charx + "," + chary);
+    }
+ 
+    @Override
+    public void keyReleased(KeyEvent e) {
+ 
+    }
+ 
+    public static void drawChar1(Graphics g) {
+        if (pickupBlue) {
+            g.setColor(Color.BLUE);
+        } else {
+            g.setColor(red);
+        }
+        g.fillOval(charx, chary, size, size);
+        g.setColor(white);
+        g.fillOval(charx + 55, chary + 20, 15, 35);
+        g.fillOval(charx + 75, chary + 20, 15, 35);
+        g.setColor(black);
+        g.fillOval(charx + 63, chary + 35, 5, 10);
+        g.fillOval(charx + 83, chary + 35, 5, 10);
+        g.setColor(white);
+        g.fillRect(charx + 55, chary + 65, 35, 10);
+    }
+ 
+    public static void drawChar2(Graphics g) {
+        if (pickupBlue) 
+            g.setColor(Color.BLUE);
+         else 
+            g.setColor(red);
+        g.fillOval(charx, chary + 5, size, size);
+        g.setColor(white);
+        g.fillOval(charx + 55, chary + 20, 15, 35);
+        g.fillOval(charx + 75, chary + 20, 15, 35);
+        g.setColor(black);
+        g.fillOval(charx + 63, chary + 35, 5, 10);
+        g.fillOval(charx + 83, chary + 35, 5, 10);
+        g.setColor(white);
+        g.fillRect(charx + 55, chary + 65, 35, 10);
+    }
+ 
+    public static void draw(Graphics g, wall w) {
+        g.setColor(Color.BLACK);
+        g.drawRect(w.x, w.y, w.width, w.height);
+    }
+    public static void draw(Graphics g, enemy e) {
+        g.setColor(e.c);
+        g.fillOval(e.x, e.y, 50, 50);
+        g.setColor(Color.BLACK);
+    }
+    public static boolean collide(wall w) {
+        //returns true if collision
+        //false otherwise
+        //character is left of wall - no collision
+        if (charx + size < w.x)
+            return false;
+        //character is right of wall - no collision
+        if (charx > w.x + w.width)
+            return false;
+        //character is above wall - no collision
+        if (chary + size < w.y)
+            return false;
+        //character is below wall - no collision
+        if (chary > w.y + w.height)
+            return false;
+        return true;
+    }
+    public static boolean collide(enemy e) {
+     if (charx + size < e.x)
+            return false;
+        //character is right of wall - no collision
+        if (charx > e.x + 50)
+            return false;
+        //character is above wall - no collision
+        if (chary + size < e.y)
+            return false;
+        //character is below wall - no collision
+        if (chary > e.y + 50)
+            return false;
+        return true;
+    }
+
+    //This is where the frame is painted.
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);//you should always call the super-method first
+
+        if (moveForward)
+            charx = charx + 1;
+
+        long curTime;
+        curTime = System.currentTimeMillis();
+        double timeE = (double) (curTime - timer)/1000.0;
+        if (timeE>0.5)
+            moveForward = false;
+        double timeS =(double)(curTime - startTime)/1000.0;
+        //System.out.println(timeS);
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Times New Roman", Font.PLAIN, 30));
+        g.drawString("Time:" + timeS, 100, 60); // printing time
+        /*
+        if (timeS>10) {
+            g.drawString("YOU LOSE", 100, 360); // lose text - add a part where the code stops
+            gameover = true;
+            //System.exit(0);
+        }
+        if (gameover)
+            return;
+        */
+        //draw all the walls
+        for (wall w:walls) {
+            draw(g, w);
+        }
+        for (enemy e:enemies) {
+            draw(g, e);
+        }
+        if (step == 1) {
+            drawChar1(g);
+        } else {
+            drawChar2(g);
+        }
+        
+        //keys
+        g.setColor(Color.ORANGE);
+        if (!obj.contains("key1"))
+            g.fillRect(200, 200, 20, 20);//key1
+        if (!obj.contains("key2"))
+            g.fillRect(700, 500, 20, 20);//key2
+        if (!obj.contains("key3"))
+            g.fillRect(400, 260, 20, 20);//key3
+        //Treasure Chest
+        g.setColor(Color.BLACK);
+        if (!obj.contains("treasure"))
+            g.fillRect(600, 500, 60, 60);
+
+        if (!pickupBlue) {
+            g.setColor(Color.BLUE);
+            g.fillRect(300, 200, 50, 50);
+        }
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Times New Roman", Font.PLAIN, 30));
+        for (wall w: walls) {
+            if (collide(w)) {                
+                g.drawString("COLLISION", 450, 100);                
+            }
+            else {
+                g.drawString("NO", 450, 100);
+            }
+        }
+        
+        //int [] x1 = {80,  180, 110,160, 100};
+        //int [] y1 = {100,  200,50, 220, 200};
+        //g.fillPolygon(x1, y1, 4);
+
+    }
+ 
+    public static void main(String[] args) {
+ 
+        Visual expo = new Visual();
+        JFrame f = new JFrame();
+ 
+        f.setVisible(true);
+        f.setSize(1000, 700);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.addKeyListener(expo);
+        f.add(expo);
+        //constantly repaint the frame
+        walls.add(new wall(230, 50, 10, 100));
+        walls.add(new wall(520, 456, 240, 10));
+        walls.add(new wall(650, 120, 200, 10));
+        walls.add(new wall(500, 200, 10, 400));
+        walls.add(new wall(140, 200, 10, 400));
+        walls.add(new wall(360, 200, 10, 400));
+        walls.add(new wall(800, 200, 10, 400));
+        enemies.add(new enemy(450, 250, 30));
+        enemies.add(new enemy(250, 520, 30));
+
+        startTime = System.currentTimeMillis();
+        System.out.println(startTime);
+        while (true) {
+            f.repaint();
+        }
+    }
+}
