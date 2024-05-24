@@ -293,3 +293,9 @@ public class Visual extends JPanel implements KeyListener {
         }
     }
 }
+
+
+//character design (animation between steps)
+// switching looks when moving right and left
+// code for interaction with items and enemies (cant move after hits an obstacle)
+// stop the game if it takes longer than 30-35 seconds?
