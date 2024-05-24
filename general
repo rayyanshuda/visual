@@ -26,8 +26,7 @@ public class Visual extends JPanel implements KeyListener {
     //static wall w2 = new wall(90, 56, 40, 10);
     static ArrayList<wall> walls = 
             new ArrayList<>();    
-    static ArrayList<enemy> enemies = 
-            new ArrayList<>();
+    static ArrayList<enemy> enemies = new ArrayList<>();
 
     static int charx = 0;
     static int chary = 0;
@@ -294,6 +293,17 @@ public class Visual extends JPanel implements KeyListener {
     }
 }
 
+//setting: green grass with patches of pads (blue character?)
+//if collision with pad, decrease speed (decrease health by 15 and animation change for contact every 10 seconds)
+//change color of character based on health (blue for high, yellow for mid, red for low)
+//different items around the maps (some increase health and others increase speed)
+
+//extra
+//if crosses a certain time limit, then game over and cannot move anymore
+
+
+
+//change character design
 
 //character design (animation between steps)
 // switching looks when moving right and left
