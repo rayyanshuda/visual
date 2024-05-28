@@ -276,13 +276,13 @@ public class Visual extends JPanel implements KeyListener {
         f.addKeyListener(expo);
         f.add(expo);
         //constantly repaint the frame
-        walls.add(new wall(230, 50, 10, 100));
-        walls.add(new wall(520, 456, 240, 10));
-        walls.add(new wall(650, 120, 200, 10));
-        walls.add(new wall(500, 200, 10, 400));
-        walls.add(new wall(140, 200, 10, 400));
-        walls.add(new wall(360, 200, 10, 400));
-        walls.add(new wall(800, 200, 10, 400));
+        walls.add(new wall(130, 70, 70, 70));
+        walls.add(new wall(520, 456, 140, 140));
+        walls.add(new wall(650, 120, 100, 100));
+        walls.add(new wall(500, 200, 85, 85));
+        walls.add(new wall(140, 200, 125, 125));
+        walls.add(new wall(360, 200, 40, 40));
+        walls.add(new wall(800, 200, 75, 75));
         enemies.add(new enemy(450, 250, 30));
         enemies.add(new enemy(250, 520, 30));
 
