@@ -1,6 +1,5 @@
 package com.mycompany.visual;
 
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
@@ -121,8 +120,16 @@ public class Visual extends JPanel implements KeyListener {
         if (pickupBlue) {
             g.setColor(Color.BLUE);
         } else {
-            g.setColor(red);
+            g.setColor(Color.cyan);
         }
+        
+        
+        
+        // if health is above 80, cyan
+        // if health is above 60, yellow
+        // if health is above 40, orange
+        // if health is above 20; red
+        
         g.fillOval(charx, chary, size, size);
         g.setColor(white);
         g.fillOval(charx + 55, chary + 20, 15, 35);
@@ -151,8 +158,8 @@ public class Visual extends JPanel implements KeyListener {
     }
  
     public static void draw(Graphics g, wall w) {
-        g.setColor(Color.BLACK);
-        g.drawRect(w.x, w.y, w.width, w.height);
+        g.setColor(Color.BLACK); //rectangles
+        g.drawOval(w.x, w.y, w.width, w.height);
     }
     public static void draw(Graphics g, enemy e) {
         g.setColor(e.c);
@@ -188,6 +195,7 @@ public class Visual extends JPanel implements KeyListener {
         //character is below wall - no collision
         if (chary > e.y + 50)
             return false;
+        
         return true;
     }
 
@@ -195,8 +203,11 @@ public class Visual extends JPanel implements KeyListener {
     @Override
     public void paint(Graphics g) {
         super.paint(g);//you should always call the super-method first
-
-        if (moveForward)
+        
+        g.setColor(Color.GREEN); //bg color
+        g.fillRect(0, 0, 1000, 700); // bg shape
+        
+        if (moveForward) //moving forward speed
             charx = charx + 1;
 
         long curTime;
@@ -209,6 +220,7 @@ public class Visual extends JPanel implements KeyListener {
         g.setColor(Color.BLACK);
         g.setFont(new Font("Times New Roman", Font.PLAIN, 30));
         g.drawString("Time:" + timeS, 100, 60); // printing time
+        
         /*
         if (timeS>10) {
             g.drawString("YOU LOSE", 100, 360); // lose text - add a part where the code stops
@@ -252,12 +264,15 @@ public class Visual extends JPanel implements KeyListener {
         g.setFont(new Font("Times New Roman", Font.PLAIN, 30));
         for (wall w: walls) {
             if (collide(w)) {                
-                g.drawString("COLLISION", 450, 100);                
+                g.drawString("COLLISION", 450, 100);
+                //speed = 2; //DECREASE SPEED
             }
             else {
                 g.drawString("NO", 450, 100);
+                //speed = 5;
             }
         }
+        
         
         //int [] x1 = {80,  180, 110,160, 100};
         //int [] y1 = {100,  200,50, 220, 200};
@@ -271,18 +286,23 @@ public class Visual extends JPanel implements KeyListener {
         JFrame f = new JFrame();
  
         f.setVisible(true);
-        f.setSize(1000, 700);
+        f.setSize(1000, 700); //size of the screen
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.addKeyListener(expo);
         f.add(expo);
         //constantly repaint the frame
-        walls.add(new wall(130, 70, 70, 70));
+        
+        //adding walls
+        walls.add(new wall(130, 70, 70, 70)); //walls are the balls that slow speed and decrease health
         walls.add(new wall(520, 456, 140, 140));
         walls.add(new wall(650, 120, 100, 100));
         walls.add(new wall(500, 200, 85, 85));
         walls.add(new wall(140, 200, 125, 125));
         walls.add(new wall(360, 200, 40, 40));
         walls.add(new wall(800, 200, 75, 75));
+        
+        
+        //adding enemies
         enemies.add(new enemy(450, 250, 30));
         enemies.add(new enemy(250, 520, 30));
 
@@ -293,6 +313,9 @@ public class Visual extends JPanel implements KeyListener {
         }
     }
 }
+
+//to change later;
+//decrease speed of the char if collision with a wall (circles)
 
 //setting: green grass with patches of pads (blue character?)
 //if collision with pad, decrease speed (decrease health by 15 and animation change for contact every 10 seconds)
